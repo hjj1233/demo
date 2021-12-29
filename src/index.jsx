@@ -5,10 +5,19 @@ import {BrowserRouter} from 'react-router-dom'
 
 import App from './App';
 
+import localStore from './utils/storageUtils'
+import memoryUtils from './utils/memoryUtils'
+
+const user= localStore.getUser()
+memoryUtils.user=user
+
 
 
 ReactDOM.render(
-  <App />,
+  
+  <BrowserRouter>
+  <App />
+  </BrowserRouter>,
   
   document.getElementById('root')
 );

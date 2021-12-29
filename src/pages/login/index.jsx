@@ -1,25 +1,32 @@
 import React, { Component } from 'react';
 import { Form, Input, Button, Checkbox ,message} from 'antd';
 import {UserOutlined,UnlockOutlined} from "@ant-design/icons"
-
+import {Redirect} from 'react-router-dom'
 
 import {reqLogin} from '../../api/index'
 
-import Logo from './images/logo512.png'
+import Logo from '../../asstes/images/logo512.png'
 import './login.less'
 
+import memoryUtils from '../../utils/memoryUtils'
+import localStorage from '../../utils/storageUtils'
 
 
 
 class Login extends Component {
 
 onFinish =async (e)=>{
+ 
+
+
   const res= await reqLogin(e)
   const loginData= res.data
   if(res.status === 0) {
     console.log('登录',res.data)
     message.success('登录成功')
+    localStorage.setUser(loginData)
     this.props.history.replace('/')
+   
   }else {
     message.error(res.msg)
   }
@@ -53,6 +60,10 @@ validatorPro = (rule,value,callback)=>{
   }
 }
   render() {
+    const user = memoryUtils.user
+    if(user && user._id) {
+       return   <Redirect to='/' />
+    }
     return (
       <div className='login'>
         <header className='login-header'>
