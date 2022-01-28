@@ -16,24 +16,31 @@ const {Footer, Sider, Content } = Layout;
 
 class Admin extends Component {
 
+ 
 
+componentWillMount() {
+}
+
+componentDidCatch() {}
 
   render() {
-   const user = memoryUtils.user
-   console.log('1231',user)
-   if(!user || !user._id) {
-    return  <Redirect to='/login' />
-   }
+  //  const user = memoryUtils.user
+  // const {user} = this.state
+  // console.log('用户信息',user)
+  //  if(!user || !user._id) {
+  //   return  <Redirect to='/login' />
+  //  }
+  //  console.log('用户信息1',user)
     return (
       <>
-   
+   {/* {console.log('用户信息2',user)} */}
    <Layout style={{height:'100%'}}>
       <Sider><LeftNav /></Sider>
       <Layout>
         <Header>Header</Header>
-        <Content style={{backgroundColor:'#fff'}}>
+        <Content style={{margin:20, backgroundColor:'#fff'}}>
         <Switch>
-         <Route path='/home' component={Home} />
+         <Route path='/home' component={Home} exact />
          <Route path='/category' component={Category} />
          <Route path='/product' component={Product} />
          <Route path='/role' component={Role} />

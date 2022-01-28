@@ -16,17 +16,13 @@ import localStorage from '../../utils/storageUtils'
 class Login extends Component {
 
 onFinish =async (e)=>{
- 
-
-
   const res= await reqLogin(e)
   const loginData= res.data
   if(res.status === 0) {
     console.log('登录',res.data)
     message.success('登录成功')
     localStorage.setUser(loginData)
-    this.props.history.replace('/')
-   
+    this.props.history.replace('/home')
   }else {
     message.error(res.msg)
   }
