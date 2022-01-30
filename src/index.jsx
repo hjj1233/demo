@@ -7,7 +7,8 @@ import App from './App';
 
 import localStore from './utils/storageUtils'
 import memoryUtils from './utils/memoryUtils'
-
+import {Provider} from 'react-redux'
+import store from './redux/store';
 const user= localStore.getUser()
 memoryUtils.user=user
 
@@ -16,7 +17,9 @@ memoryUtils.user=user
 ReactDOM.render(
   
   <BrowserRouter>
+  <Provider store={store} >
   <App />
+  </Provider>
   </BrowserRouter>,
   
   document.getElementById('root')

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import moment from 'moment'
 import { Modal,message } from 'antd';
 import { withRouter } from 'react-router-dom';
+import {connect} from 'react-redux'
+import {setHeaderTitle,loginOut} from '../../redux/actions'
 
 import './index.less'
 import {reqWeather} from '../../api'
@@ -20,8 +22,8 @@ class Header extends Component {
 
   getTime=()=>{
     // const createTime=this.state.createTime
-   this.timer= setInterval(()=>{
-this.setState({createTime:moment(new Date()).format('YYYY-MM-DD HH:mm:ss')})
+    this.timer= setInterval(()=>{
+    this.setState({createTime:moment(new Date()).format('YYYY-MM-DD HH:mm:ss')})
     },1000)
   }
 
@@ -36,15 +38,16 @@ getWeather=async ()=>{
 LoginOut = ()=>{
   Modal.confirm({
     content:'您确认要退出吗?',
-    okText:'确认',
+    okText:'确定',
     cancelText:'取消',
     onOk:()=>{
       //清除浏览器里的用户信息
       storageUtils.removeUser()
       //清除本地里的用户信息
-      memoryUtils.user={}
-      this.props.history.replace('/login')
-      message.success('退出成功')
+      // memoryUtils.user={}
+      // this.props.history.replace('/login') 
+      // message.success('退出成功')
+      this.props.loginOut()
     },
   })
 }
@@ -64,18 +67,24 @@ componentWillUnmount() {
 
 
   render() {
+    console.log('redux',this.props.header,this.props.setHeaderTitle)
     const {dayPictureUrl,weather,createTime} =this.state
-    const username=memoryUtils.user.username
+    // const username=memoryUtils.user.username
     // const {pathName} = this.state
     const pathName=  this.props.location.pathname
     return (
       <div className='header'>
         <div className='header-top'>
-          <span>欢迎, {username}</span>
+          <span>欢迎, {this.props.user.username}</span>
           <LinkButton onClick={this.LoginOut}>退出</LinkButton>
         </div>
         <div className='header-bottom'>
-          <div className='header-bottom-left'>{
+          <div className='header-bottom-left'>
+              {
+               this.props.header 
+              }
+          </div>
+          {/* <div className='header-bottom-left'>{
                         pathName==='/home'
                         ? '首页' : pathName==='/category' 
                         ? '品类管理': pathName==='/product' 
@@ -85,7 +94,7 @@ componentWillUnmount() {
                         ? '柱形图' : pathName==='/charts/line'
                         ? '折线图' : pathName==='/charts/pie'
                         ? '饼图':'首页'
-          }</div>
+          }</div> */}
           <div className='header-bottom-right'>
             <span>{createTime}</span>
             <img src={dayPictureUrl} alt='weather'/>
@@ -97,4 +106,7 @@ componentWillUnmount() {
   }
 }
 
-export default withRouter(Header);
+export default connect(
+  state=>({header:state.headerTitle,user:state.user}),
+  {setHeaderTitle,loginOut}
+)(withRouter(Header));
