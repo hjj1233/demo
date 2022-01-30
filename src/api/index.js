@@ -13,7 +13,7 @@ const BASE =''
 
 //登录
 export const reqLogin = (params) =>{
-  console.log('11111')
+  console.log(params)
   return  ajax(BASE +'/login',params,'POST')
 }
 

@@ -14,7 +14,8 @@ import {
   BarChartOutlined
 
 } from '@ant-design/icons';
-
+import {connect} from 'react-redux'
+import {setHeaderTitle} from '../../redux/actions'
 
 
 
@@ -49,7 +50,26 @@ class LeftNav extends Component {
       openKey='/product'
     }
     console.log('渲染后',openKey)
-
+    let key
+    if(openKey == '/home' || openKey == '/') {
+      key = '首页'
+    }else if(openKey == '/category') {
+      key = '品类管理'
+    }else if(openKey == '/product') {
+      key = '商品管理'
+    }else if(openKey == '/user') {
+      key = '用户管理'
+    }else if(openKey == '/role') {
+      key = '角色管理'
+    }else if(openKey == '/charts/bar') {
+      key = '柱形图'
+    }else if(openKey == '/charts/line') {
+      key = '折线图'
+    }else if(openKey == '/charts/pie') {
+      key = '饼图'
+    }
+   this.props.setHeaderTitle(key)
+  
     return (
       <div className='left-nav'>
       <Link to='/' className='left-nav-header'>
@@ -105,4 +125,7 @@ class LeftNav extends Component {
   }
 }
 
-export default withRouter( LeftNav);
+export default connect(
+  state=>({header:state.headerTitle}),
+  {setHeaderTitle}
+)(withRouter( LeftNav));

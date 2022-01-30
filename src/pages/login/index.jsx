@@ -3,7 +3,7 @@ import { Form, Input, Button, Checkbox ,message} from 'antd';
 import {UserOutlined,UnlockOutlined} from "@ant-design/icons"
 import {Redirect} from 'react-router-dom'
 
-import {reqLogin} from '../../api/index'
+// import {reqLogin} from '../../api/index'
 
 import Logo from '../../asstes/images/logo512.png'
 import './login.less'
@@ -11,21 +11,28 @@ import './login.less'
 import memoryUtils from '../../utils/memoryUtils'
 import localStorage from '../../utils/storageUtils'
 
+import {login} from '../../redux/actions' 
+import {connect} from 'react-redux'
+
 
 
 class Login extends Component {
 
 onFinish =async (e)=>{
-  const res= await reqLogin(e)
-  const loginData= res.data
-  if(res.status === 0) {
-    console.log('登录',res.data)
-    message.success('登录成功')
-    localStorage.setUser(loginData)
-    this.props.history.replace('/home')
-  }else {
-    message.error(res.msg)
-  }
+  console.log(e)
+  this.props.login(e)
+  
+  // const res= await reqLogin(e)
+  // const loginData= res.data
+  // if(res.status === 0) {
+  //   console.log('登录',res.data)
+  //   message.success('登录成功')
+  //   // localStorage.setUser(loginData)
+  //   this.props.login(loginData)
+  //   this.props.history.replace('/home')
+  // }else {
+  //   message.error(res.msg)
+  // }
    
 
 // reqLogin({username,password}).then(response=>{
@@ -56,9 +63,11 @@ validatorPro = (rule,value,callback)=>{
   }
 }
   render() {
-    const user = memoryUtils.user
+    const user = this.props.user
+    console.log(user)
     if(user && user._id) {
-       return   <Redirect to='/' />
+      
+       return   <Redirect to='/home' />
     }
     return (
       <div className='login'>
@@ -67,11 +76,12 @@ validatorPro = (rule,value,callback)=>{
           <h1>React项目：后台管理系统</h1>  
            </header>
        <section className='login-content'>
+         <div className={this.props.user?.data ? 'error-msg show' : 'error-msg'}>{this.props.user?.data}</div>
           <h2>用户登录</h2>
         <div>
         <Form
-      name="basic"
-      initialValues={{
+        name="basic"
+        initialValues={{
         remember: true,
       }}
       onFinish={this.onFinish}
@@ -147,4 +157,7 @@ validatorPro = (rule,value,callback)=>{
   }
 }
 
-export default Login;
+export default connect(
+  state=>({user:state.user}),
+  {login}
+)(Login);
